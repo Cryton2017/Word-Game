@@ -1,0 +1,67 @@
+body{
+  background-image: url('./images/background.jpeg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #14cdee;
+}
+
+.MainContent{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100vw;
+  height: 93vh;
+}
+
+.division{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50vw;
+}
+
+.loginDirections{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 30vw;
+  background: #272729ad;
+  height: 60vh;
+}
+
+.homePageHeadingCOnt{
+  height: 20vh;
+  width: 30vh;
+}
+
+.homeText{
+  text-align: center;
+}
+
+.homePageButtons{
+  width: 15vw;
+  height: 7vh;
+  margin: 5%;
+  background: #272729;
+  border: 1px solid #14cdee;
+  color: #14cdee;
+}
+
+.homePageButtons:hover{
+  background: #14cdee;
+  border: 1px solid #272729;
+  color: #9696a8;
+}
+
+/* For Mobile Devices */
+@media only screen and (max-device-width: 480px) {
+
+}
