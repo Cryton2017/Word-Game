@@ -5,6 +5,7 @@ import { Auth } from '../src/auth';
 import Home from './Home/Home';
 import playerLogin from './playerLogin/playerLogin';
 import playerDashboard from './playerDashboard/playerDashboard';
+import GameBoard from './playerDashboard/GameBoard/GameBoard';
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={(props) => (
@@ -25,6 +26,7 @@ function App() {
         {/* <PrivateRoute exact path='/admin/Dashboard' component={facilitatorDashboard} /> */}
         <Route exact path="/playerLogin" component={playerLogin} />
         <PrivateRoute exact path='/player/Dashboard' component={playerDashboard} />
+        <PrivateRoute exact path='/player/game' component={GameBoard} />
       </div>
   );
 }

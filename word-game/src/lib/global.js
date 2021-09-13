@@ -8,6 +8,9 @@ module.exports = {
       id: "",
       username: "",
       password: ""
+    },
+    game: {
+      id: ""
     }
   }
 };
