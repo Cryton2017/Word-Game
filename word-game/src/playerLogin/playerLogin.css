@@ -1,0 +1,72 @@
+.LoginContent{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;;
+    color: #4ab84a;
+    font-size: large;
+}
+
+.LoginDivision{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+    height: 100vh;
+    background: #272729;
+}
+
+.LoginFormCont{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40vw;
+    height: 60vh;
+    border: 2px solid #4ab84a;
+    background-color: #272729;
+}
+
+.loginHeading{
+    margin: 10%;
+}
+
+.LoginForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 35vw;
+    height: 50vh;
+}
+
+.loginInput{
+    color: #272729;
+    border: none;
+    border-bottom: 3px solid #4ab84a;
+    background-color: #272729;
+    margin: 5%;
+}
+
+.login_btn{
+    width: 15vw;
+    height: 7vh;
+    margin: 5%;
+    background: #272729;
+    border: 3px solid #4ab84a;
+    color: white;
+}
+
+.login_btn:hover{
+    background: #4ab84a;
+    border: 3px solid #272729;
+    color: white;
+}
+
+#btnLogin{
+    font-size: x-large;
+    font-weight: 1000;
+}

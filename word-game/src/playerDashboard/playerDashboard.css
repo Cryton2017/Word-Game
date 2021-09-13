@@ -1,0 +1,53 @@
+.playerDashPageContent{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 100vh;
+    width: 100vw;
+}
+
+.playerDashNavigation{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 20vw;
+    background: black;
+    opacity: 0.8;
+}
+
+.playerDashNavLogo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.playerDashNavBTN{
+    color: white;
+}
+
+.playerDashNavBTN:hover{
+    color: white;
+    background: #d12020;
+}
+
+.playerDashActiveNavBTN{
+    background: #d12020;
+    color: white;
+}
+
+.playerDashActiveNavBTN:hover{
+    background: #d12020;
+    color: white;
+}
+
+.playerDashMainPage{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 100vh;
+    width: 80vw;
+}
