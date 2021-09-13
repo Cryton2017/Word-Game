@@ -1,0 +1,24 @@
+.mainGameContent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80vw;
+    height: 100vh;
+}
+
+.btnStartGame{
+    background-color: #14cdee;
+    border: #14cdee 2px solid;
+    color: black;
+    width: 20vw;
+    height: 10vh;
+    font-size: xx-large;
+    font-weight: 1000;
+}
+
+.btnStartGame:hover{
+    background-color: white;
+    border: #14cdee 2px solid;
+    color: black;
+}

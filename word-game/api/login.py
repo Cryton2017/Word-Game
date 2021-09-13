@@ -5,8 +5,8 @@ app = Flask(__name__)
 
 #Configure the Database connection:
 app.config['MYSQL_DATABASE_HOST'] = 'kaiodbd01.c9jstcsli73i.us-east-2.rds.amazonaws.com'
-app.config['MYSQL_DATABASE_USER'] = 'admin'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hJUkRcTVo9mkRNHf9dSk'
+app.config['MYSQL_DATABASE_USER'] = 'wordgame'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'wordgameIntelliHR@1234'
 app.config['MYSQL_DATABASE_DB'] = 'WordGame'
 
 mysql = MySQL()

@@ -81,6 +81,22 @@ INSERT INTO words(word) VALUES ('ABA');
 INSERT INTO words(word) VALUES ('ABACA');
 INSERT INTO words(word) VALUES ('ABACAS');
 
+#Create the game table:
+CREATE TABLE IF NOT EXISTS games (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`user_id` VARCHAR(45) NOT NULL,
+	`username` VARCHAR(45) NOT NULL,
+    `totalPoints` VARCHAR(45),
+	PRIMARY KEY (`id`));
+    
+#Create the hand dealt table:
+CREATE TABLE IF NOT EXISTS handDelt (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`game_id` VARCHAR(45) NOT NULL,
+	`user_id` VARCHAR(45) NOT NULL,
+    `letter` VARCHAR(45) NOT NULL,
+	PRIMARY KEY (`id`));
+
 #create the admins table:
 CREATE TABLE IF NOT EXISTS admins (
 	`id` INT NOT NULL AUTO_INCREMENT,
