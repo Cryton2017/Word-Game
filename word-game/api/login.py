@@ -15,7 +15,7 @@ mysql.init_app(app)
 #Log the Player in:
 def player_login(Username, Password):
 
-    #Construct the query and get results:
+    #Execute the query:
     cur = mysql.get_db().cursor()
     cur.execute("SELECT * FROM players WHERE username = %s AND password = %s", (Username, Password))
     count = cur.rowcount

@@ -10,7 +10,11 @@ module.exports = {
       password: ""
     },
     game: {
-      id: ""
+      id: "",
+      hand: [],
+      currentScore: "Loading...",
+      totalScore: "Loading...",
+      lettersRemaining: "Loading..."
     }
   }
 };

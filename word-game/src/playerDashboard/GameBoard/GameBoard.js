@@ -35,9 +35,6 @@ class GameBoard extends Component {
       submitHeader: "",
       submitBody: "",
 
-      currentScore: "Loading...",
-      totalScore: "Loading...",
-      lettersRemaining: "Loading...",
       playerHand: [],
       selectedLetters: [],
       createdWord: []
@@ -48,7 +45,8 @@ class GameBoard extends Component {
     this.startGame = this.startGame.bind(this);
     this.gameStarted = this.gameStarted.bind(this);
     this.addScoreToTotal = this.addScoreToTotal.bind(this);
-    this.gameRestarted = this.gameRestarted.bind(this);
+    this.addScoreToDB = this.addScoreToDB.bind(this);
+    this.endGame = this.endGame.bind(this);
 
     this.messageToggle = this.messageToggle.bind(this);
     this.endGameToggle = this.endGameToggle.bind(this);
@@ -95,52 +93,73 @@ class GameBoard extends Component {
 
   //Use a letter:
   playLetter(letter){
+    
+    //Get the selected letter:
     document.getElementById(letter).disabled = true;
         
+    //Add the letter to the gameboard:
     var tmpSelectedLetters = this.state.selectedLetters;
     var tmpCreatedWord = this.state.createdWord;
-    var tmpLetterCount = this.state.lettersRemaining - 1;
+    global.state.game.lettersRemaining = global.state.game.lettersRemaining - 1;
     tmpSelectedLetters.push(letter);
     tmpCreatedWord.push(letter);
     this.setState({
       selectedLetters: tmpSelectedLetters,
-      tmpCreatedWord: tmpCreatedWord,
-      lettersRemaining: tmpLetterCount
+      tmpCreatedWord: tmpCreatedWord
     });
 
-    if(tmpLetterCount === 0){
+    //If the player's hand is empty:
+    if(global.state.game.lettersRemaining === 0){
       //Display a notice message:
       this.setState({
         submitHeader: "Empty Hand",
         submitBody: "You have run out of letters!"
       });
-        this.messageToggle();
-      }
+      this.messageToggle();
+    }
     
+  }
+
+  //Submit the constructed word:
+  submitWord(){
+
+    //Get the word:
+    let word = this.state.createdWord.join('');
+
+    //Make the request:
+    var data = new FormData();
+    data.append('wordString', word);
+    data.append('word', this.state.createdWord);
+
+    //Make the request:
+    var requestURL = '/get_word_score';
+    this.serverReq(requestURL, this.addScoreToTotal, data);
+
   }
 
   //Restart the game:
   restartGame(){
 
+    //Re-enable all the letter buttons:
     for(var i=0; i<this.state.selectedLetters.length; i++){
       document.getElementById(this.state.selectedLetters[i]).disabled = false;
     }
 
+    //Reset the game stats:
+    global.state.game.currentScore = 0;
+    global.state.game.totalScore = 0;
+    global.state.game.lettersRemaining = global.state.game.lettersRemaining + this.state.selectedLetters.length;
     this.setState({
       selectedLetters: [],
-      createdWord: [],
-      currentScore: 0,
-      totalScore: 0
+      createdWord: []
     });
 
-      //Create data object:
-      var data = new FormData();
-      data.append('game_id', global.state.game.id);
-      
-      //Make the request:
-      var requestURL = '/restart_game';
-      this.serverReq(requestURL, this.gameRestarted, data);
-    
+    //Display a confirmation message:
+    this.setState({
+      submitHeader: "Game Restarted",
+      submitBody: "The game has been restarted. Good Luck!"
+    });
+    this.messageToggle();
 
   }
 
@@ -156,21 +175,17 @@ class GameBoard extends Component {
 
   }
 
-  //Submit the constructed word:
-  submitWord(){
-
-    //Get the word:
-    let word = this.state.createdWord.join('');
+  //Add the score to the database:
+  addScoreToDB(){
 
     //Make the request:
     var data = new FormData();
     data.append('game_id', global.state.game.id);
-    data.append('wordString', word);
-    data.append('word', this.state.createdWord);
+    data.append('score', global.state.game.totalScore);
 
-    //Make the request:
-    var requestURL = '/get_word_score';
-    this.serverReq(requestURL, this.addScoreToTotal, data);
+        //Make the request:
+        var requestURL = '/set_game_score';
+        this.serverReq(requestURL, this.endGame, data);
 
   }
 
@@ -201,28 +216,37 @@ class GameBoard extends Component {
 
       //Save the game's ID:
       global.state.game.id = response.game_id;
+      global.state.game.hand = response.Letters;
 
       //For each row in the response:
-      for(var i=0; i<response.Total; i++){
+      for(var i=0; i<response.Count; i++){
 
           //Add the result to the temp array:
           playerHandTMP.push(
               <Button className='LetterBTN' 
-              id={response.hand[i].letter+i} 
-              onClick={this.playLetter.bind(this, response.hand[i].letter+i)}>
-                {response.hand[i].letter}
+              id={response.Letters[i]+i} 
+              onClick={this.playLetter.bind(this, response.Letters[i]+i)}>
+                {response.Letters[i]}
               </Button>
           )
 
         }
 
+      //Display the starting Stats:
+      global.state.game.lettersRemaining = response.Count;
+      global.state.game.currentScore = 0;
+      global.state.game.totalScore = 0;
       this.setState({
-        playerHand: playerHandTMP,
-        lettersRemaining: response.Total,
-        currentScore: 0,
-        totalScore: 0
+        playerHand: playerHandTMP
       });
 
+    }else if(response.status === 'NO'){
+      //Display an error message:
+      this.setState({
+        submitHeader: "Error",
+        submitBody: response.Reason
+      });
+      this.messageToggle();
     }
 
   }
@@ -233,40 +257,45 @@ class GameBoard extends Component {
     //If the response is OK:
     if(response.status === 'OK'){
 
-    this.setState({
-      currentScore: response.CurrentScore,
-      totalScore: response.TotalScore,
-      createdWord: []
-    });
+      //Set the scores:
+      global.state.game.currentScore = response.Score;
+      global.state.game.totalScore = global.state.game.totalScore + response.Score;
 
-    }else if(response.status === 'NO' && response.Reason === 'NoWordFound'){
+      //Reset the word variable:
+      this.setState({
+        createdWord: []
+      });
+
+    }else if(response.status === 'NO'){
       //Display an error message:
       this.setState({
         lettersRemaining: response.Total,
         submitHeader: "Error",
-        submitBody: "No word was found. Please try again."
+        submitBody: response.Reason
       });
       this.messageToggle();
     }
 
   }
 
-  //Restart the game:
-  gameRestarted(response){
+  //End the game:
+  endGame(response){
 
-    //If the response is OK:
+    //If the request was successful:
     if(response.status === 'OK'){
 
-      //Display a confirmation message:
+      //redirect to the dashboard:
+      this.navToDash();
+
+    }else if(response.status === 'NO'){
+      //Display an error message:
       this.setState({
         lettersRemaining: response.Total,
-        submitHeader: "Game Restarted",
-        submitBody: "The game has been restarted. Good Luck!"
+        submitHeader: "Error",
+        submitBody: response.Reason
       });
       this.messageToggle();
-
     }
-
   }
 
   //Navigate to Dahboard:
@@ -318,7 +347,7 @@ class GameBoard extends Component {
           <ModalBody>{this.state.submitBody}</ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.endGameToggle}>Keep Playing!</Button>{' '}
-            <Button olor="danger" onClick={this.navToDash}>End Game</Button>{' '}
+            <Button olor="danger" onClick={this.addScoreToDB}>End Game</Button>{' '}
           </ModalFooter>
         </Modal>
 
@@ -338,15 +367,15 @@ class GameBoard extends Component {
             <div className='scoreContainer'>
               <div className='scoreItem'>
                 <h3>Last Word Score</h3>
-                <p>{this.state.currentScore}</p>
+                <p>{global.state.game.currentScore}</p>
               </div>
               <div  className='scoreItem'>
                 <h3>Total Score</h3>
-                <p>{this.state.totalScore}</p>
+                <p>{global.state.game.totalScore}</p>
               </div>
               <div  className='scoreItem'>
                 <h3>Letters Remaining</h3>
-                <p>{this.state.lettersRemaining}</p>
+                <p>{global.state.game.lettersRemaining}</p>
               </div>
             </div>
           </div>
